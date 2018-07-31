@@ -12,17 +12,22 @@ namespace TddCasino
 
         public void JoinGame(Game game)
         {
-            this.Game = game;
+            if (Game != null)
+            {
+                throw new AlreadyInGameException();
+            }
+
+            Game = game;
         }
 
         public void LeaveGame()
         {
-            if (this.Game == null)
+            if (Game == null)
             {
                 throw new NotInGameException();
             }
 
-            this.Game = null;
+            Game = null;
         }
     }
 }
