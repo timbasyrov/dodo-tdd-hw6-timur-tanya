@@ -6,6 +6,8 @@ namespace TddCasino
     {
         public Game Game { get; private set; }
 
+        public int AvailableChips { get; private set; }
+
         public Player()
         {
         }
@@ -29,6 +31,12 @@ namespace TddCasino
             }
 
             Game = null;
+        }
+
+        public void BuyChips(Casino casino, int chipsAmount)
+        {
+            casino.SellChips(chipsAmount);
+            AvailableChips += chipsAmount;
         }
     }
 }
