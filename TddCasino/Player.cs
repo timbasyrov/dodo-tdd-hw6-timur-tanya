@@ -52,7 +52,6 @@ namespace TddCasino
             var bet = new Bet(chipsAmount, number);
             AvailableChips -= chipsAmount;
             AllBets.Add(bet);
-           // Game.AcceptBet(this, bet);
         }
     }
 

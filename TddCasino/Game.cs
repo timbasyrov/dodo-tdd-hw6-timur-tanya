@@ -6,7 +6,7 @@ namespace TddCasino
     public class Game
     {
         private const int MaxPlayersCount = 6;
-        public Dictionary<Player, Bet> Players = new Dictionary<Player, Bet>();
+        public List<Player> Players = new List<Player>();
 
         public void AddPlayer(Player player)
         {
@@ -15,17 +15,12 @@ namespace TddCasino
                 throw new TooManyPlayersException();
             }
 
-            Players.Add(player, null);
+            Players.Add(player);
         }
 
         public bool HasBetFrom(Player player)
         {
-            return Players.ContainsKey(player);
-        }
-
-        public void AcceptBet(Player player, Bet bet)
-        {
-            Players[player] = bet;
+            return Players.Contains(player);
         }
     }
 }
