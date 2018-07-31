@@ -54,7 +54,7 @@ namespace TddCasino.Tests
         }
 
         
-        //    Я, как игрок, не могу поставить фишек больше, чем я купил
+        
         //    Я, как игрок, могу сделать несколько ставок на разные числа, чтобы повысить вероятность выигрыша
         //Я, как казино, принимаю только ставки, кратные 5
         //Я, как игрок, могу поставить только на числа 1 - 6
@@ -83,6 +83,20 @@ namespace TddCasino.Tests
             player.MakeBet(chipsAmount:1, number:2);
 
             Assert.Equal(9, player.AvailableChips);
+        }
+
+        [Fact]
+        // Я, как игрок, не могу поставить фишек больше, чем я купил
+        public void ThrowException_WhenBuy10ChipsAndMakeBetWith100Chips()
+        {
+            var player = new Player();
+            player.BuyChips(new Casino(100), 10);
+            var game = new Game();
+            player.JoinGame(game);
+
+            Action act = () => player.MakeBet(chipsAmount: 100, number: 2);
+
+            Assert.Throws<NotEnoughChipsException>(act);
         }
     }
 

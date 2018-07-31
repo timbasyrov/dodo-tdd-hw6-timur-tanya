@@ -41,6 +41,11 @@ namespace TddCasino
 
         public void MakeBet(int chipsAmount, int number)
         {
+            if (AvailableChips < chipsAmount)
+            {
+                throw new NotEnoughChipsException();
+            }
+
             var bet = new Bet(chipsAmount, number);
             AvailableChips -= chipsAmount;
             Game.AcceptBet(this, bet);
