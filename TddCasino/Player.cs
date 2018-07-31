@@ -70,7 +70,7 @@ namespace TddCasino
             Game.Casino.TakeChips(lostChips);
         }
 
-        public void Win(int chipsAmount)
+        public virtual void Win(int chipsAmount)
         {
             AvailableChips += chipsAmount * 6;
         }

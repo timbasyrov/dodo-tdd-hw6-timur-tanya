@@ -138,10 +138,7 @@ namespace TddCasino.Tests
 
             Assert.Throws<NotValidBetNumberException>(act);
         }
-
-        
-        //    Я, как игрок, могу сделать несколько ставок на разные числа и получить выигрыш по тем, которые выиграли
-
+  
         [Fact]
         // Я, как игрок, могу проиграть, если сделал неправильную ставку
         public void Lose_WhenMadeWrongBet()
@@ -157,9 +154,9 @@ namespace TddCasino.Tests
 
             playerMock.Verify(x => x.Lose(), Times.Once);
         }
-
-        // Я, как игрок, могу выиграть 6 ставок, если сделал правильную ставку
+        
         [Fact]
+        // Я, как игрок, могу выиграть 6 ставок, если сделал правильную ставку
         public void GetChipsMultipleTo6_WhenMadeRightBet()
         {
             var gameStub = new Mock<Game>(new Casino(100));
@@ -172,6 +169,23 @@ namespace TddCasino.Tests
             gameStub.Object.Play();
 
             Assert.Equal(60, player.AvailableChips);
+        }
+
+        [Fact]
+        // Я, как игрок, могу сделать несколько ставок на разные числа и получить выигрыш по тем, которые выиграли
+        public void Win_WhenMadeAtListOneRightBet()
+        {
+            var playerMock = new Mock<Player>();
+            var gameStub = new Mock<Game>(new Casino(100));
+            gameStub.Setup(x => x.GetLuckyNumber()).Returns(4);
+            playerMock.Object.JoinGame(gameStub.Object);
+            playerMock.Object.BuyChips(15);
+            playerMock.Object.MakeBet(chipsAmount: 5, number: 4);
+            playerMock.Object.MakeBet(chipsAmount: 10, number: 1);
+
+            gameStub.Object.Play();
+
+            playerMock.Verify(x => x.Win(5), Times.Once);
         }
 
     }
