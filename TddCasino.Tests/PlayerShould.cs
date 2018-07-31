@@ -55,7 +55,7 @@ namespace TddCasino.Tests
 
         
         
-        //    Я, как игрок, могу сделать несколько ставок на разные числа, чтобы повысить вероятность выигрыша
+        
         //Я, как казино, принимаю только ставки, кратные 5
         //Я, как игрок, могу поставить только на числа 1 - 6
 
@@ -97,6 +97,21 @@ namespace TddCasino.Tests
             Action act = () => player.MakeBet(chipsAmount: 100, number: 2);
 
             Assert.Throws<NotEnoughChipsException>(act);
+        }
+
+        [Fact]
+        // Я, как игрок, могу сделать несколько ставок на разные числа, чтобы повысить вероятность выигрыша
+        public void Have2Bets_WhenMakeBetTwice()
+        {
+            var player = new Player();
+            player.BuyChips(new Casino(100), 10);
+            var game = new Game();
+            player.JoinGame(game);
+
+            player.MakeBet(chipsAmount: 1, number: 2);
+            player.MakeBet(chipsAmount: 2, number: 3);
+
+            Assert.Equal(2, player.AllBets.Count);
         }
     }
 

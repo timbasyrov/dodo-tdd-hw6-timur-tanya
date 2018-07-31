@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TddCasino
 {
     public class Player
     {
+        public List<Bet> AllBets = new List<Bet>();
+
         public Game Game { get; private set; }
 
         public int AvailableChips { get; private set; }
@@ -48,7 +51,8 @@ namespace TddCasino
 
             var bet = new Bet(chipsAmount, number);
             AvailableChips -= chipsAmount;
-            Game.AcceptBet(this, bet);
+            AllBets.Add(bet);
+           // Game.AcceptBet(this, bet);
         }
     }
 
