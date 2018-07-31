@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TddCasino
 {
     public class Game
     {
+        private const int MaxPlayersCount = 6;
         public List<Player> Players = new List<Player>();
-
-        public Game()
-        {
-        }
 
         public void AddPlayer(Player player)
         {
-            if (Players.Count >= 6)
+            if (Players.Count >= MaxPlayersCount)
             {
-                throw new Exception();
+                throw new TooManyPlayersException();
             }
 
             Players.Add(player);

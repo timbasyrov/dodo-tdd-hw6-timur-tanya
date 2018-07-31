@@ -17,7 +17,7 @@ namespace TddCasino.Tests
 
             Action act = () => (new Player()).JoinGame(game);
 
-            Assert.Throws<Exception>(act);
+            Assert.Throws<TooManyPlayersException>(act);
         }
     }
 }
