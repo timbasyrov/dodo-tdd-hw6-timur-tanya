@@ -159,6 +159,22 @@ namespace TddCasino.Tests
             playerMock.Verify(x => x.Lose(), Times.Once);
         }
 
+        // Я, как игрок, могу выиграть 6 ставок, если сделал правильную ставку
+        [Fact]
+        public void GetChipsMultipleTo6_WhenMadeRightBet()
+        {
+            var gameStub = new Mock<Game>(new Casino(100));
+            gameStub.Setup(x => x.GetLuckyNumber()).Returns(4);
+            var player = new Player();
+            player.JoinGame(gameStub.Object);
+            player.BuyChips(10);
+            player.MakeBet(chipsAmount: 10, number: 4);
+
+            gameStub.Object.Play();
+
+            Assert.Equal(60, player.AvailableChips);
+        }
+
     }
 
 }

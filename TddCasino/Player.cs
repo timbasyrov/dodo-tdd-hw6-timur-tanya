@@ -70,7 +70,7 @@ namespace TddCasino
 
         public void Win(int chipsAmount)
         {
-            AvailableChips += chipsAmount;
+            AvailableChips += chipsAmount * 6;
         }
     }
 
