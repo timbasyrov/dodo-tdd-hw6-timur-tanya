@@ -18,6 +18,7 @@ namespace TddCasino
             }
 
             Game = game;
+            game.AddPlayer(this);
         }
 
         public void LeaveGame()
