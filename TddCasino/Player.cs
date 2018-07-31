@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TddCasino
 {
@@ -60,6 +61,16 @@ namespace TddCasino
 
             AvailableChips -= chipsAmount;
             AllBets.Add(bet);
+        }
+
+        public virtual void Lose()
+        {
+            AvailableChips -= AllBets.Sum(x => x.ChipsAmount);
+        }
+
+        public void Win(int chipsAmount)
+        {
+            AvailableChips += chipsAmount;
         }
     }
 

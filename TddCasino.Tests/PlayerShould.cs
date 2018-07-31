@@ -1,4 +1,5 @@
 using System;
+using Moq;
 using Xunit;
 
 namespace TddCasino.Tests
@@ -137,6 +138,27 @@ namespace TddCasino.Tests
 
             Assert.Throws<NotValidBetNumberException>(act);
         }
+
+        //Я, как игрок, могу выиграть 6 ставок, если сделал правильную ставку
+        //Я, как казино, получаю фишки, которые проиграл игрок
+        //    Я, как игрок, могу сделать несколько ставок на разные числа и получить выигрыш по тем, которые выиграли
+
+        [Fact]
+        // Я, как игрок, могу проиграть, если сделал неправильную ставку
+        public void Lose_WhenMadeWrongBet()
+        {
+            var playerMock = new Mock<Player>();
+            var gameStub = new Mock<Game>(new Casino(100));
+            gameStub.Setup(x => x.GetLuckyNumber()).Returns(4);
+            playerMock.Object.JoinGame(gameStub.Object);
+            playerMock.Object.BuyChips(15);
+            playerMock.Object.MakeBet(chipsAmount: 5, number: 5);
+
+            gameStub.Object.Play();
+
+            playerMock.Verify(x => x.Lose(), Times.Once);
+        }
+
     }
 
 }
