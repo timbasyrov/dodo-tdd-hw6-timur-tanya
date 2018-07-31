@@ -16,6 +16,11 @@ namespace TddCasino
             Chips -= amount;
         }
 
+        public void TakeChips(int amount)
+        {
+            Chips += amount;
+        }
+
         public void CheckBet(Bet bet)
         {
             if (bet.ChipsAmount % 5 != 0)

@@ -65,7 +65,9 @@ namespace TddCasino
 
         public virtual void Lose()
         {
-            AvailableChips -= AllBets.Sum(x => x.ChipsAmount);
+            var lostChips = AllBets.Sum(x => x.ChipsAmount);
+            AvailableChips -= lostChips;
+            Game.Casino.TakeChips(lostChips);
         }
 
         public void Win(int chipsAmount)
