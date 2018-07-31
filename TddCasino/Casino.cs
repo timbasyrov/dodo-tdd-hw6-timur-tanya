@@ -1,4 +1,6 @@
-﻿namespace TddCasino
+﻿using System;
+
+namespace TddCasino
 {
     public class Casino
     {
@@ -12,6 +14,14 @@
         public void SellChips(int amount)
         {
             Chips -= amount;
+        }
+
+        public void CheckBet(Bet bet)
+        {
+            if (bet.ChipsAmount % 5 != 0)
+            {
+                throw new NotValidBetException();
+            }
         }
     }
 }

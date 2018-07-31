@@ -11,7 +11,7 @@ namespace TddCasino.Tests
         public void BeInGame_WhenJoinGame()
         {
             var player = new Player();
-            var game = new Game();
+            var game = new Game(new Casino(100));
 
             player.JoinGame(game);
 
@@ -23,7 +23,7 @@ namespace TddCasino.Tests
         public void NotBeInGame_WhenLeaveGame()
         {
             var player = new Player();
-            player.JoinGame(new Game());
+            player.JoinGame(new Game(new Casino(100)));
 
             player.LeaveGame();
 
@@ -45,28 +45,26 @@ namespace TddCasino.Tests
         //Я, как игрок, могу играть только в одну игру одновременно
         public void ThrowExceptionOnJoinGame_WhenInGame()
         {
+            var casino = new Casino(100);
             var player = new Player();
-            player.JoinGame(new Game());
+            player.JoinGame(new Game(casino));
 
-            Action act = () => player.JoinGame(new Game());
+            Action act = () => player.JoinGame(new Game(casino));
 
             Assert.Throws<AlreadyInGameException>(act);
         }
-
         
-        
-        
-        //Я, как казино, принимаю только ставки, кратные 5
         //Я, как игрок, могу поставить только на числа 1 - 6
 
         [Fact]
         // Я, как игрок, могу купить фишки у казино, чтобы делать ставки
-        public void Have10AvailableChips_WhenBuy10ChipsInCasino()
+        public void Have10AvailableChips_WhenBuy10Chips()
         {
+            var game = new Game(new Casino(100));
             var player = new Player();
-            var casino = new Casino(100);
+            player.JoinGame(game);
 
-            player.BuyChips(casino, 10);
+            player.BuyChips(10);
 
             Assert.Equal(10, player.AvailableChips);
         }
@@ -75,24 +73,24 @@ namespace TddCasino.Tests
         // Я, как игрок, могу сделать ставку в игре в кости, чтобы выиграть
         public void Have9AvailableChips_WhenBuy10ChipsAndMakeBetWith1Chip()
         {
+            var game = new Game(new Casino(100));
             var player = new Player();
-            player.BuyChips(new Casino(100), 10);
-            var game = new Game();
             player.JoinGame(game);
+            player.BuyChips(20);
 
-            player.MakeBet(chipsAmount:1, number:2);
+            player.MakeBet(chipsAmount:10, number:2);
 
-            Assert.Equal(9, player.AvailableChips);
+            Assert.Equal(10, player.AvailableChips);
         }
 
         [Fact]
         // Я, как игрок, не могу поставить фишек больше, чем я купил
         public void ThrowException_WhenBuy10ChipsAndMakeBetWith100Chips()
         {
+            var game = new Game(new Casino(100));
             var player = new Player();
-            player.BuyChips(new Casino(100), 10);
-            var game = new Game();
             player.JoinGame(game);
+            player.BuyChips(10);
 
             Action act = () => player.MakeBet(chipsAmount: 100, number: 2);
 
@@ -104,12 +102,12 @@ namespace TddCasino.Tests
         public void Have2Bets_WhenMakeBetTwice()
         {
             var player = new Player();
-            player.BuyChips(new Casino(100), 10);
-            var game = new Game();
+            var game = new Game(new Casino(100));
             player.JoinGame(game);
-
-            player.MakeBet(chipsAmount: 1, number: 2);
-            player.MakeBet(chipsAmount: 2, number: 3);
+            player.BuyChips(15);
+            
+            player.MakeBet(chipsAmount: 5, number: 2);
+            player.MakeBet(chipsAmount: 10, number: 3);
 
             Assert.Equal(2, player.AllBets.Count);
         }

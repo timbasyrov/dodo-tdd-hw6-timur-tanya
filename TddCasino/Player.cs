@@ -36,9 +36,9 @@ namespace TddCasino
             Game = null;
         }
 
-        public void BuyChips(Casino casino, int chipsAmount)
+        public void BuyChips(int chipsAmount)
         {
-            casino.SellChips(chipsAmount);
+            Game.Casino.SellChips(chipsAmount);
             AvailableChips += chipsAmount;
         }
 
@@ -50,6 +50,9 @@ namespace TddCasino
             }
 
             var bet = new Bet(chipsAmount, number);
+
+            Game.Casino.CheckBet(bet);
+
             AvailableChips -= chipsAmount;
             AllBets.Add(bet);
         }

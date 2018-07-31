@@ -7,6 +7,12 @@ namespace TddCasino
     {
         private const int MaxPlayersCount = 6;
         public List<Player> Players = new List<Player>();
+        public Casino Casino { get; private set; }
+
+        public Game(Casino casino)
+        {
+            Casino = casino;
+        }
 
         public void AddPlayer(Player player)
         {

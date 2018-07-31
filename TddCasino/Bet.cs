@@ -2,13 +2,13 @@
 {
     public class Bet
     {
-        private int chipsAmount;
-        private int number;
+        public int ChipsAmount { get; private set; }
+        public int Number { get; private set; }
 
         public Bet(int amount, int number)
         {
-            this.chipsAmount = amount;
-            this.number = number;
+            ChipsAmount = amount;
+            Number = number;
         }
     }
 }
