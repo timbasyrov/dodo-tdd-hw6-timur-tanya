@@ -54,8 +54,6 @@ namespace TddCasino.Tests
             Assert.Throws<AlreadyInGameException>(act);
         }
         
-        //Я, как игрок, могу поставить только на числа 1 - 6
-
         [Fact]
         // Я, как игрок, могу купить фишки у казино, чтобы делать ставки
         public void Have10AvailableChips_WhenBuy10Chips()
@@ -110,6 +108,34 @@ namespace TddCasino.Tests
             player.MakeBet(chipsAmount: 10, number: 3);
 
             Assert.Equal(2, player.AllBets.Count);
+        }
+
+        [Fact]
+        // Я, как игрок, могу поставить только на числа 1 - 6
+        public void ThrowException_WhenBetNumberIsZero()
+        {
+            var player = new Player();
+            var game = new Game(new Casino(100));
+            player.JoinGame(game);
+            player.BuyChips(15);
+
+            Action act = () => player.MakeBet(chipsAmount: 5, number: 0);
+
+            Assert.Throws<NotValidBetNumberException>(act);
+        }
+
+        [Fact]
+        // Я, как игрок, могу поставить только на числа 1 - 6
+        public void ThrowException_WhenBetNumberIs7()
+        {
+            var player = new Player();
+            var game = new Game(new Casino(100));
+            player.JoinGame(game);
+            player.BuyChips(15);
+
+            Action act = () => player.MakeBet(chipsAmount: 5, number: 7);
+
+            Assert.Throws<NotValidBetNumberException>(act);
         }
     }
 

@@ -49,6 +49,11 @@ namespace TddCasino
                 throw new NotEnoughChipsException();
             }
 
+            if (number < 1 || number > 6)
+            {
+                throw new NotValidBetNumberException();
+            }
+
             var bet = new Bet(chipsAmount, number);
 
             Game.Casino.CheckBet(bet);
