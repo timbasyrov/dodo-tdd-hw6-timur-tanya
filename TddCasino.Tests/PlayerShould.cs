@@ -53,7 +53,7 @@ namespace TddCasino.Tests
             Assert.Throws<AlreadyInGameException>(act);
         }
 
-        //Я, как игрок, могу сделать ставку в игре в кости, чтобы выиграть
+        
         //    Я, как игрок, не могу поставить фишек больше, чем я купил
         //    Я, как игрок, могу сделать несколько ставок на разные числа, чтобы повысить вероятность выигрыша
         //Я, как казино, принимаю только ставки, кратные 5
@@ -69,6 +69,20 @@ namespace TddCasino.Tests
             player.BuyChips(casino, 10);
 
             Assert.Equal(10, player.AvailableChips);
+        }
+
+        [Fact]
+        // Я, как игрок, могу сделать ставку в игре в кости, чтобы выиграть
+        public void Have9AvailableChips_WhenBuy10ChipsAndMakeBetWith1Chip()
+        {
+            var player = new Player();
+            player.BuyChips(new Casino(100), 10);
+            var game = new Game();
+            player.JoinGame(game);
+
+            player.MakeBet(chipsAmount:1, number:2);
+
+            Assert.Equal(9, player.AvailableChips);
         }
     }
 

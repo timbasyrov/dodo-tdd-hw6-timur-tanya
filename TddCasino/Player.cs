@@ -38,5 +38,13 @@ namespace TddCasino
             casino.SellChips(chipsAmount);
             AvailableChips += chipsAmount;
         }
+
+        public void MakeBet(int chipsAmount, int number)
+        {
+            var bet = new Bet(chipsAmount, number);
+            AvailableChips -= chipsAmount;
+            Game.AcceptBet(this, bet);
+        }
     }
+
 }
