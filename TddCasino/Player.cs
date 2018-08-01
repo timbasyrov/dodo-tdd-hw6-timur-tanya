@@ -50,7 +50,9 @@ namespace TddCasino
                 throw new NotEnoughChipsException();
             }
 
-            if (number < 1 || number > 6)
+            var diceCount = Game.Croupier.Dices.Count;
+
+            if (number < 1 * diceCount || number > 6 * diceCount)
             {
                 throw new NotValidBetNumberException();
             }

@@ -113,7 +113,7 @@ namespace TddCasino.Tests
 
         [Fact]
         // Я, как игрок, могу поставить только на числа 1 - 6
-        public void ThrowException_WhenBetNumberIsZero()
+        public void ThrowException_WhenBetNumberIsZero_AndOneDiceInGame()
         {
             var player = new Player();
             var game = new Game(new Casino(100), new Croupier(1));
@@ -127,7 +127,7 @@ namespace TddCasino.Tests
 
         [Fact]
         // Я, как игрок, могу поставить только на числа 1 - 6
-        public void ThrowException_WhenBetNumberIs7()
+        public void ThrowException_WhenBetNumberIs7_AndOneDiceInGame()
         {
             var player = new Player();
             var game = new Game(new Casino(100), new Croupier(1));
@@ -191,8 +191,37 @@ namespace TddCasino.Tests
             playerMock.Verify(x => x.Win(5), Times.Once);
         }
 
+        [Fact]
+        // Я, как игрок, могу делать ставки на числа от 2 до 12
+        public void ThrowException_WhenBetNumberIs1_AndTwoDicesInGame()
+        {
+            var player = new Player();
+            var game = new Game(new Casino(100), new Croupier(2));
+            player.JoinGame(game);
+            player.BuyChips(15);
 
-        //    Я, как игрок, могу делать ставки на числа от 2 до 12
+            Action act = () => player.MakeBet(chipsAmount: 5, number: 1);
+
+            Assert.Throws<NotValidBetNumberException>(act);
+        }
+
+        [Fact]
+        // Я, как игрок, могу делать ставки на числа от 2 до 12
+        public void ThrowException_WhenBetNumberIs13_AndTwoDicesInGame()
+        {
+            var player = new Player();
+            var game = new Game(new Casino(100), new Croupier(2));
+            player.JoinGame(game);
+            player.BuyChips(15);
+
+            Action act = () => player.MakeBet(chipsAmount: 5, number: 13);
+
+            Assert.Throws<NotValidBetNumberException>(act);
+        }
+
+        
+
+        
         //Я, как казино, определяю выигрышный коэффициент по вероятности выпадения того или иного номера
 
         //2 3 4 5 6 7 8 9 10 11 12
