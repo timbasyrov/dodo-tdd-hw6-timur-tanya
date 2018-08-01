@@ -188,7 +188,7 @@ namespace TddCasino.Tests
 
             game.Play();
 
-            playerMock.Verify(x => x.Win(5), Times.Once);
+            playerMock.Verify(x => x.Win(It.Is<Bet>(y => y.ChipsAmount == 5)), Times.Once);
         }
 
         [Fact]
@@ -218,16 +218,5 @@ namespace TddCasino.Tests
 
             Assert.Throws<NotValidBetNumberException>(act);
         }
-
-        
-
-        
-        //я, как казино, определ€ю выигрышный коэффициент по веро€тности выпадени€ того или иного номера
-
-        //2 3 4 5 6 7 8 9 10 11 12
-        //36 18 12 9 7 6 7 9 12 18 36
-
-
     }
-
 }

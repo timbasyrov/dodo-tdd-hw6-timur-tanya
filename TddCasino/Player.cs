@@ -72,9 +72,13 @@ namespace TddCasino
             Game.Casino.TakeChips(lostChips);
         }
 
-        public virtual void Win(int chipsAmount)
+        public virtual void Win(Bet bet)
         {
-            AvailableChips += chipsAmount * 6;
+            var coefficient = Game.Croupier.Dices.Count == 1
+                ? 6
+                : Game.Casino.GetWinCoefficient(bet.Number);
+            
+            AvailableChips += bet.ChipsAmount * coefficient;
         }
     }
 

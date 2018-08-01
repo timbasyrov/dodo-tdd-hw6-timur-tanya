@@ -18,9 +18,9 @@ namespace TddCasino.Tests
 
             Assert.Throws<NotValidBetException>(act);
         }
-
-        // Я, как казино, получаю фишки, которые проиграл игрок
+        
         [Fact]
+        // Я, как казино, получаю фишки, которые проиграл игрок
         public void GetPlayerChips_WhenHeLose()
         {
             var cropierStub = new Mock<Croupier>(1);
@@ -35,6 +35,24 @@ namespace TddCasino.Tests
             game.Play();
 
             Assert.Equal(100, casino.Chips);
+        }
+
+        [Fact]
+        // Я, как казино, определяю выигрышный коэффициент по вероятности выпадения того или иного номера
+        public void GetWinCoefficient_WhenPlayerWinWithTwoDicesInGame()
+        {
+            var casinoMock = new Mock<Casino>(100);
+            var cropierStub = new Mock<Croupier>(2);
+            cropierStub.Setup(x => x.RollDices()).Returns(4);
+            var game = new Game(casinoMock.Object, cropierStub.Object);
+            var player = new Player();
+            player.JoinGame(game);
+            player.BuyChips(10);
+            player.MakeBet(chipsAmount: 10, number: 4);
+
+            game.Play();
+
+            casinoMock.Verify(x=>x.GetWinCoefficient(4), Times.Once);
         }
     }
 }

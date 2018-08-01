@@ -37,7 +37,7 @@ namespace TddCasino
                 var luckyBet = player.AllBets.FirstOrDefault(x => x.Number == luckyNumber);
                 if (luckyBet != null)
                 {
-                    player.Win(luckyBet.ChipsAmount);
+                    player.Win(luckyBet);
                 }
                 else
                 {
