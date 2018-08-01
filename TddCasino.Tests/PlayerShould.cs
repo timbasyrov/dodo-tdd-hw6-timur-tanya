@@ -70,7 +70,7 @@ namespace TddCasino.Tests
 
         [Fact]
         // Я, как игрок, могу сделать ставку в игре в кости, чтобы выиграть
-        public void Have9AvailableChips_WhenBuy10ChipsAndMakeBetWith1Chip()
+        public void Have10AvailableChips_WhenBuy20ChipsAndMakeBetWith10Chips()
         {
             var game = new Game(new Casino(100), new Croupier(1));
             var player = new Player();
