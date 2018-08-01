@@ -11,7 +11,7 @@ namespace TddCasino.Tests
         public void ThrowException_WhenBetIsNotMultipleTo5()
         {
             var player = new Player();
-            player.JoinGame(new Game(new Casino(100)));
+            player.JoinGame(new Game(new Casino(100), new Croupier(1)));
             player.BuyChips(10);
 
             Action act = () => player.MakeBet(9, 2);
@@ -23,15 +23,16 @@ namespace TddCasino.Tests
         [Fact]
         public void GetPlayerChips_WhenHeLose()
         {
+            var cropierStub = new Mock<Croupier>(1);
+            cropierStub.Setup(x => x.RollDices()).Returns(4);
             var casino = new Casino(100);
-            var gameStub = new Mock<Game>(casino);
-            gameStub.Setup(x => x.GetLuckyNumber()).Returns(4);
+            var game = new Game(casino, cropierStub.Object);
             var player = new Player();
-            player.JoinGame(gameStub.Object);
+            player.JoinGame(game);
             player.BuyChips(10);
             player.MakeBet(chipsAmount: 10, number: 1);
 
-            gameStub.Object.Play();
+            game.Play();
 
             Assert.Equal(100, casino.Chips);
         }

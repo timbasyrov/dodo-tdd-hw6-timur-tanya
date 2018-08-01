@@ -12,7 +12,7 @@ namespace TddCasino.Tests
         public void ThrowExceptionOnJoinPlayer_When6PlayersInGame()
         {
             var fixture = new Fixture();
-            var game = new Game(new Casino(100));
+            var game = new Game(new Casino(100), new Croupier(1));
             fixture.CreateMany<Player>(6).ToList().ForEach(x => x.JoinGame(game));
 
             Action act = () => (new Player()).JoinGame(game);

@@ -7,14 +7,15 @@ namespace TddCasino
     public class Game
     {
         private const int MaxPlayersCount = 6;
-
         public List<Player> Players = new List<Player>();
 
         public Casino Casino { get; private set; }
+        public Croupier Croupier { get; private set; }
 
-        public Game(Casino casino)
+        public Game(Casino casino, Croupier croupier)
         {
             Casino = casino;
+            Croupier = croupier;
         }
 
         public void AddPlayer(Player player)
@@ -26,20 +27,10 @@ namespace TddCasino
 
             Players.Add(player);
         }
-
-        public bool HasBetFrom(Player player)
-        {
-            return Players.Contains(player);
-        }
-
-        public virtual int GetLuckyNumber()
-        {
-            return (new Random()).Next(1, 6);
-        }
-
+        
         public void Play()
         {
-            var luckyNumber = GetLuckyNumber();
+            var luckyNumber = Croupier.RollDices();
 
             foreach (var player in Players)
             {
