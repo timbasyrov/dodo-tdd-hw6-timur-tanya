@@ -1,5 +1,6 @@
 using System;
 using Moq;
+using TddCasino.Tests.DSL;
 using Xunit;
 
 namespace TddCasino.Tests
@@ -8,11 +9,10 @@ namespace TddCasino.Tests
     {
 
         [Fact]
-        // Я, как игрок, могу войти в игру
         public void BeInGame_WhenJoinGame()
         {
-            var player = new Player();
-            var game = new Game(new Casino(100), new Croupier(1));
+            var player = Create.Player.Please();
+            var game = Create.Game.Please();
 
             player.JoinGame(game);
 
