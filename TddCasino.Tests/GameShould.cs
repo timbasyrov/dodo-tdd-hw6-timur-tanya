@@ -60,7 +60,7 @@ namespace TddCasino.Tests
         {
             var game = Create.Game.WithDiceCount(2).Please();
 
-            Assert.Equal(2, game.Dices.Count);
+            game.AssertThatDiceCountEqualTo(2);
         }
     }
 }

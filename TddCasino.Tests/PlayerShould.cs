@@ -16,7 +16,7 @@ namespace TddCasino.Tests
 
             player.JoinGame(game);
 
-            Assert.Equal(game, player.Game);
+            player.AssertThatGameEqualTo(game);
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace TddCasino.Tests
 
             player.LeaveGame();
 
-            Assert.Null(player.Game);
+            player.AssertThatGameIsNull();
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace TddCasino.Tests
 
             Action act = () => player.LeaveGame();
 
-            Assert.Throws<NotInGameException>(act);
+            AssertThat.PlayerNotInGame(act);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace TddCasino.Tests
 
             Action act = () => player.JoinGame(Create.Game.Please());
 
-            Assert.Throws<AlreadyInGameException>(act);
+            AssertThat.PlayerAlreadyInGame(act);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace TddCasino.Tests
 
             player.BuyChips(10);
 
-            Assert.Equal(10, player.AvailableChips);
+            player.AssertThatAvailableChipsEqualTo(10);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace TddCasino.Tests
 
             player.MakeBet(chipsAmount: 10, number: 2);
 
-            Assert.Equal(10, player.AvailableChips);
+            player.AssertThatAvailableChipsEqualTo(10);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace TddCasino.Tests
 
             Action act = () => player.MakeBet(chipsAmount: 100, number: 2);
 
-            Assert.Throws<NotEnoughChipsException>(act);
+            AssertThat.PlayerHasNotEnoughChips(act);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace TddCasino.Tests
             player.MakeBet(chipsAmount: 5, number: 2);
             player.MakeBet(chipsAmount: 10, number: 3);
 
-            Assert.Equal(2, player.AllBets.Count);
+            player.AssertThatBetsCountsEqualTo(2);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace TddCasino.Tests
 
             Action act = () => player.MakeBet(chipsAmount: 5, number: 0);
 
-            Assert.Throws<NotValidBetNumberException>(act);
+            AssertThat.NotValidBetNumber(act);
         }
 
         [Fact]
@@ -107,14 +107,14 @@ namespace TddCasino.Tests
 
             Action act = () => player.MakeBet(chipsAmount: 5, number: 7);
 
-            Assert.Throws<NotValidBetNumberException>(act);
+            AssertThat.NotValidBetNumber(act);
         }
 
         [Fact]
         public void Lose_WhenMadeWrongBet()
         {
             var game = Create.GameMock.WithLuckyNumber(4).Please().Object;
-            var playerMock = Create.PlayerMock
+            var player = Create.PlayerMock
                 .InGame(game)
                 .WithChips(15)
                 .WithBet(chipsAmount: 5, number: 5)
@@ -122,7 +122,7 @@ namespace TddCasino.Tests
 
             game.Play();
 
-            playerMock.Verify(x => x.Lose(), Times.Once);
+            VerifyThat.LoseCallOnceIn(player);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace TddCasino.Tests
 
             Action act = () => player.MakeBet(chipsAmount: 5, number: 1);
 
-            Assert.Throws<NotValidBetNumberException>(act);
+            AssertThat.NotValidBetNumber(act);
         }
 
         [Fact]
@@ -179,7 +179,7 @@ namespace TddCasino.Tests
 
             Action act = () => player.MakeBet(chipsAmount: 5, number: 13);
 
-            Assert.Throws<NotValidBetNumberException>(act);
+            AssertThat.NotValidBetNumber(act);
         }
     }
 }

@@ -11,5 +11,10 @@ namespace TddCasino.Tests.DSL
         {
             gameMock.Verify(x => x.GetWinCoefficient(4), Times.Once);
         }
+
+        public static void LoseCallOnceIn(Mock<Player> playerMock)
+        {
+            playerMock.Verify(x => x.Lose(), Times.Once);
+        }
     }
 }
