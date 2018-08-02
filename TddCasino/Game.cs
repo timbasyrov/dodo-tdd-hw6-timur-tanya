@@ -7,14 +7,16 @@ namespace TddCasino
     public class Game
     {
         private const int MaxPlayersCount = 6;
-        private Dictionary<int, int> _winCoefficients = new Dictionary<int, int>()
+        private readonly Dictionary<int, int> _winCoefficients = new Dictionary<int, int>()
         {
             {2, 36}, {3, 18}, {4, 12}, {5, 9}, {6, 7}, {7, 6}, {8, 7}, {9, 9}, {10, 12}, {11, 18}, {12, 36}
         };
 
-        public List<Player> Players = new List<Player>();
+        private readonly List<Player> _players = new List<Player>();
+
         public int Chips { get; private set; }
-        public List<Dice> Dices { get; private set; }
+
+        public List<Dice> Dices { get; }
 
         public Game(int diceCount)
         {
@@ -29,28 +31,33 @@ namespace TddCasino
 
         public void AddPlayer(Player player)
         {
-            if (Players.Count >= MaxPlayersCount)
+            if (_players.Count >= MaxPlayersCount)
             {
                 throw new TooManyPlayersException();
             }
 
-            Players.Add(player);
+            _players.Add(player);
         }
         
         public void Play()
         {
             var luckyNumber = RollDices();
 
-            foreach (var player in Players)
+            foreach (var player in _players)
             {
-                var luckyBet = player.AllBets.FirstOrDefault(x => x.Number == luckyNumber);
+                var luckyBet = player.FindBet(luckyNumber);
                 if (luckyBet != null)
                 {
-                    player.Win(luckyBet);
+                    var coefficient = Dices.Count == 1 ? 6 : GetWinCoefficient(luckyNumber);
+                    var chips = luckyBet.ChipsAmount * coefficient;
+
+                    player.WinChips(chips);
                 }
                 else
                 {
-                    player.Lose();
+                    var lostChips = player.GetChipsFromAllBets();
+                    player.LoseChips(lostChips);
+                    Chips += lostChips;
                 }
             }
         }
@@ -60,13 +67,20 @@ namespace TddCasino
             Chips -= amount;
         }
 
-        public void TakeChips(int amount)
+        public void CheckBet(Bet bet, Player player)
         {
-            Chips += amount;
-        }
+            if (player.AvailableChips < bet.ChipsAmount)
+            {
+                throw new NotEnoughChipsException();
+            }
 
-        public void CheckBet(Bet bet)
-        {
+            var diceCount = Dices.Count;
+
+            if (bet.Number < 1 * diceCount || bet.Number > 6 * diceCount)
+            {
+                throw new NotValidBetNumberException();
+            }
+
             if (bet.ChipsAmount % 5 != 0)
             {
                 throw new NotValidBetException();

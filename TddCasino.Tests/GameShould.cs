@@ -52,7 +52,7 @@ namespace TddCasino.Tests
 
             game.Object.Play();
 
-            VerifyThat.GetWinCoefficientCallOnceIn(game);
+            VerifyThat.GetWinCoefficientCalledOnceIn(game);
         }
 
         [Fact]

@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace TddCasino
 {
     public class Player
     {
-        public List<Bet> AllBets = new List<Bet>();
+        private readonly List<Bet> _allBets = new List<Bet>();
 
         public Game Game { get; private set; }
 
         public int AvailableChips { get; private set; }
-
-        public Player()
-        {
-        }
 
         public void JoinGame(Game game)
         {
@@ -45,41 +40,37 @@ namespace TddCasino
 
         public void MakeBet(int chipsAmount, int number)
         {
-            if (AvailableChips < chipsAmount)
-            {
-                throw new NotEnoughChipsException();
-            }
-
-            var diceCount = Game.Dices.Count;
-
-            if (number < 1 * diceCount || number > 6 * diceCount)
-            {
-                throw new NotValidBetNumberException();
-            }
-
             var bet = new Bet(chipsAmount, number);
 
-            Game.CheckBet(bet);
+            Game.CheckBet(bet, this);
 
             AvailableChips -= chipsAmount;
-            AllBets.Add(bet);
+            _allBets.Add(bet);
         }
 
-        public virtual void Lose()
+        public int GetChipsFromAllBets()
         {
-            var lostChips = AllBets.Sum(x => x.ChipsAmount);
-            AvailableChips -= lostChips;
-            Game.TakeChips(lostChips);
+            return _allBets.Sum(x => x.ChipsAmount);
         }
 
-        public virtual void Win(Bet bet)
+        public virtual void LoseChips(int count)
         {
-            var coefficient = Game.Dices.Count == 1
-                ? 6
-                : Game.GetWinCoefficient(bet.Number);
-            
-            AvailableChips += bet.ChipsAmount * coefficient;
+            AvailableChips -= count;
+        }
+
+        public virtual void WinChips(int count)
+        {
+            AvailableChips += count;
+        }
+
+        public Bet FindBet(int luckyNumber)
+        {
+            return _allBets.FirstOrDefault(x => x.Number == luckyNumber);
+        }
+
+        public int GetBetsCount()
+        {
+            return _allBets.Count;
         }
     }
-
 }

@@ -1,6 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
-using Moq;
 using TddCasino.Tests.DSL;
 using Xunit;
 
@@ -122,7 +120,7 @@ namespace TddCasino.Tests
 
             game.Play();
 
-            VerifyThat.LoseCallOnceIn(player);
+            VerifyThat.LoseCalledOnceIn(player);
         }
 
         [Fact]
@@ -137,23 +135,23 @@ namespace TddCasino.Tests
 
             game.Play();
 
-            Assert.Equal(60, player.AvailableChips);
+            player.AssertThatAvailableChipsEqualTo(60);
         }
 
         [Fact]
         public void Win_WhenMadeAtListOneRightBet()
         {
             var game = Create.GameMock.WithLuckyNumber(4).Please().Object;
-            var playerMock = Create.PlayerMock
+            var player = Create.PlayerMock
                 .InGame(game)
-                .WithChips(15)
+                .WithChips(20)
                 .WithBet(chipsAmount: 5, number: 4)
                 .WithBet(chipsAmount: 10, number: 1)
                 .Please();
 
             game.Play();
 
-            playerMock.Verify(x => x.Win(It.Is<Bet>(y => y.ChipsAmount == 5)), Times.Once);
+            VerifyThat.WinCalledWithBetWith60ChipsOnceIn(player);
         }
 
         [Fact]

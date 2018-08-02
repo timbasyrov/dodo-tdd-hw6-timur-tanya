@@ -34,7 +34,7 @@ namespace TddCasino.Tests.DSL
 
         public static void AssertThatBetsCountsEqualTo(this Player player, int count)
         {
-            Assert.Equal(count, player.AllBets.Count);
+            Assert.Equal(count, player.GetBetsCount());
         }
     }
 }

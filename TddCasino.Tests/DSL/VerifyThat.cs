@@ -7,14 +7,19 @@ namespace TddCasino.Tests.DSL
 {
     public static class VerifyThat
     {
-        public static void GetWinCoefficientCallOnceIn(Mock<Game> gameMock)
+        public static void GetWinCoefficientCalledOnceIn(Mock<Game> gameMock)
         {
             gameMock.Verify(x => x.GetWinCoefficient(4), Times.Once);
         }
 
-        public static void LoseCallOnceIn(Mock<Player> playerMock)
+        public static void LoseCalledOnceIn(Mock<Player> playerMock)
         {
-            playerMock.Verify(x => x.Lose(), Times.Once);
+            playerMock.Verify(x => x.LoseChips(It.IsAny<int>()), Times.Once);
+        }
+
+        public static void WinCalledWithBetWith60ChipsOnceIn(Mock<Player> playerMock)
+        {
+            playerMock.Verify(x => x.WinChips(60), Times.Once);
         }
     }
 }

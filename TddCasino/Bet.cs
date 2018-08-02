@@ -2,8 +2,8 @@
 {
     public class Bet
     {
-        public int ChipsAmount { get; private set; }
-        public int Number { get; private set; }
+        public int ChipsAmount { get; }
+        public int Number { get; }
 
         public Bet(int amount, int number)
         {
