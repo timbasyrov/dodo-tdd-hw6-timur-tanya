@@ -48,7 +48,7 @@ namespace TddCasino
                 var luckyBet = player.FindBet(luckyNumber);
                 if (luckyBet != null)
                 {
-                    var coefficient = Dices.Count == 1 ? 6 : GetWinCoefficient(luckyNumber);
+                    var coefficient = GetWinCoefficient(luckyNumber);
                     var chips = luckyBet.ChipsAmount * coefficient;
 
                     player.WinChips(chips);
@@ -90,7 +90,7 @@ namespace TddCasino
         public virtual int GetWinCoefficient(int luckyNumber)
         {
             _winCoefficients.TryGetValue(luckyNumber, out int result);
-            return result;
+            return Dices.Count == 1 ? 6 : result;
         }
 
         public virtual int RollDices()

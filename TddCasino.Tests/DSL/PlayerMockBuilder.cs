@@ -25,6 +25,8 @@ namespace TddCasino.Tests.DSL
             return this;
         }
 
+        
+
         public PlayerMockBuilder WithBet(int chipsAmount, int number)
         {
             _playerMock.Object.MakeBet(chipsAmount, number);

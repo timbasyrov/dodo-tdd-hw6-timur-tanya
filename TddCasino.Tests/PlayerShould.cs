@@ -124,9 +124,12 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        public void GetChipsMultipleTo6_WhenMadeRightBet()
+        public void GetChipsMultipleToWinCoefficient_WhenMadeRightBet()
         {            
-            var game = Create.GameMock.WithLuckyNumber(4).Please().Object;
+            var game = Create.GameMock
+                .WithLuckyNumber(4)
+                .WithWinCoefficient(6)
+                .Please().Object;
             var player = Create.Player
                 .InGame(game)
                 .WithChips(10)
@@ -141,7 +144,10 @@ namespace TddCasino.Tests
         [Fact]
         public void Win_WhenMadeAtListOneRightBet()
         {
-            var game = Create.GameMock.WithLuckyNumber(4).Please().Object;
+            var game = Create.GameMock
+                .WithLuckyNumber(4)
+                .WithWinCoefficient(10)
+                .Please().Object;
             var player = Create.PlayerMock
                 .InGame(game)
                 .WithChips(20)
@@ -151,7 +157,7 @@ namespace TddCasino.Tests
 
             game.Play();
 
-            VerifyThat.WinCalledWithBetWith60ChipsOnceIn(player);
+            VerifyThat.WinCalledWithBetWith50ChipsOnceIn(player);
         }
 
         [Fact]

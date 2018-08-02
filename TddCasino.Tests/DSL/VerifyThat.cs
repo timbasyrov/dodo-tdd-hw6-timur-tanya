@@ -17,9 +17,9 @@ namespace TddCasino.Tests.DSL
             playerMock.Verify(x => x.LoseChips(It.IsAny<int>()), Times.Once);
         }
 
-        public static void WinCalledWithBetWith60ChipsOnceIn(Mock<Player> playerMock)
+        public static void WinCalledWithBetWith50ChipsOnceIn(Mock<Player> playerMock)
         {
-            playerMock.Verify(x => x.WinChips(60), Times.Once);
+            playerMock.Verify(x => x.WinChips(50), Times.Once);
         }
     }
 }

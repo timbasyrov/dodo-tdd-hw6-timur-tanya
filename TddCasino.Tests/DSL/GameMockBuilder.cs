@@ -13,6 +13,7 @@ namespace TddCasino.Tests.DSL
         private int _diceCount = 1;
         private int _playersCount;
         private int? _luckyNumber;
+        private int? _winCoefficient;
 
         public GameMockBuilder WithDiceCount(int diceCount)
         {
@@ -24,6 +25,13 @@ namespace TddCasino.Tests.DSL
         public GameMockBuilder WithLuckyNumber(int number)
         {
             _luckyNumber = number;
+
+            return this;
+        }
+
+        public GameMockBuilder WithWinCoefficient(int coefficient)
+        {
+            _winCoefficient = coefficient;
 
             return this;
         }
@@ -43,6 +51,11 @@ namespace TddCasino.Tests.DSL
             {
                 var fixture = new Fixture();
                 fixture.CreateMany<Player>(_playersCount).ToList().ForEach(x => x.JoinGame(game.Object));
+            }
+
+            if (_winCoefficient != null)
+            {
+                game.Setup(x => x.GetWinCoefficient(It.IsAny<int>())).Returns((int)_winCoefficient);
             }
 
             if (_luckyNumber != null)
