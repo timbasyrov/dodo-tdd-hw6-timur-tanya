@@ -14,7 +14,7 @@ namespace TddCasino.Tests
             
             Action act = () => (new Player()).JoinGame(game);
 
-            Assert.Throws<TooManyPlayersException>(act);
+            AssertThat.TooManyPlayers(act);
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace TddCasino.Tests
 
             Action act = () => player.MakeBet(9, 2);
 
-            Assert.Throws<NotValidBetException>(act);
+            AssertThat.NotValidBet(act);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace TddCasino.Tests
 
             game.Play();
 
-            Assert.Equal(expectedChips, game.Chips);
+            game.AssertThatChipsEqualTo(expectedChips);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace TddCasino.Tests
 
             game.Object.Play();
 
-            game.Verify(x => x.GetWinCoefficient(4), Times.Once);
+            VerifyThat.GetWinCoefficientCallOnceIn(game);
         }
 
         [Fact]

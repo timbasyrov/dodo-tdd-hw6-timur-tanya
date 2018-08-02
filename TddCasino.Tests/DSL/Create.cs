@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TddCasino.Tests.DSL
+﻿namespace TddCasino.Tests.DSL
 {
     public static class Create
     {       
@@ -11,6 +7,7 @@ namespace TddCasino.Tests.DSL
         public static PlayerBuilder Player => new PlayerBuilder();
 
         public static GameMockBuilder GameMock => new GameMockBuilder();
+
         public static GameBuilder Game => new GameBuilder();
     }
 }
