@@ -7,15 +7,24 @@ namespace TddCasino
     public class Game
     {
         private const int MaxPlayersCount = 6;
-        public List<Player> Players = new List<Player>();
-
-        public Casino Casino { get; private set; }
-        public Croupier Croupier { get; private set; }
-
-        public Game(Casino casino, Croupier croupier)
+        private Dictionary<int, int> _winCoefficients = new Dictionary<int, int>()
         {
-            Casino = casino;
-            Croupier = croupier;
+            {2, 36}, {3, 18}, {4, 12}, {5, 9}, {6, 7}, {7, 6}, {8, 7}, {9, 9}, {10, 12}, {11, 18}, {12, 36}
+        };
+
+        public List<Player> Players = new List<Player>();
+        public int Chips { get; private set; }
+        public List<Dice> Dices { get; private set; }
+
+        public Game(int diceCount)
+        {
+            Chips = 100;
+            Dices = new List<Dice>();
+
+            for (int i = 0; i < diceCount; i++)
+            {
+                Dices.Add(new Dice());
+            }
         }
 
         public void AddPlayer(Player player)
@@ -30,7 +39,7 @@ namespace TddCasino
         
         public void Play()
         {
-            var luckyNumber = Croupier.RollDices();
+            var luckyNumber = RollDices();
 
             foreach (var player in Players)
             {
@@ -44,6 +53,35 @@ namespace TddCasino
                     player.Lose();
                 }
             }
+        }
+        
+        public void SellChips(int amount)
+        {
+            Chips -= amount;
+        }
+
+        public void TakeChips(int amount)
+        {
+            Chips += amount;
+        }
+
+        public void CheckBet(Bet bet)
+        {
+            if (bet.ChipsAmount % 5 != 0)
+            {
+                throw new NotValidBetException();
+            }
+        }
+
+        public virtual int GetWinCoefficient(int luckyNumber)
+        {
+            _winCoefficients.TryGetValue(luckyNumber, out int result);
+            return result;
+        }
+
+        public virtual int RollDices()
+        {
+            return Dices.Sum(x => x.GetLuckyNumber());
         }
     }
 }

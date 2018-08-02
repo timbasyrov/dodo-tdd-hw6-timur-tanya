@@ -39,7 +39,7 @@ namespace TddCasino
 
         public void BuyChips(int chipsAmount)
         {
-            Game.Casino.SellChips(chipsAmount);
+            Game.SellChips(chipsAmount);
             AvailableChips += chipsAmount;
         }
 
@@ -50,7 +50,7 @@ namespace TddCasino
                 throw new NotEnoughChipsException();
             }
 
-            var diceCount = Game.Croupier.Dices.Count;
+            var diceCount = Game.Dices.Count;
 
             if (number < 1 * diceCount || number > 6 * diceCount)
             {
@@ -59,7 +59,7 @@ namespace TddCasino
 
             var bet = new Bet(chipsAmount, number);
 
-            Game.Casino.CheckBet(bet);
+            Game.CheckBet(bet);
 
             AvailableChips -= chipsAmount;
             AllBets.Add(bet);
@@ -69,14 +69,14 @@ namespace TddCasino
         {
             var lostChips = AllBets.Sum(x => x.ChipsAmount);
             AvailableChips -= lostChips;
-            Game.Casino.TakeChips(lostChips);
+            Game.TakeChips(lostChips);
         }
 
         public virtual void Win(Bet bet)
         {
-            var coefficient = Game.Croupier.Dices.Count == 1
+            var coefficient = Game.Dices.Count == 1
                 ? 6
-                : Game.Casino.GetWinCoefficient(bet.Number);
+                : Game.GetWinCoefficient(bet.Number);
             
             AvailableChips += bet.ChipsAmount * coefficient;
         }

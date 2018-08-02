@@ -1,21 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
+using AutoFixture;
+using Moq;
 
 namespace TddCasino.Tests.DSL
 {
     public class GameBuilder
     {
-        private readonly Casino casino;
-        private readonly Croupier croupier;
+        private int _diceCount = 1;
+        private int _playersCount;
 
-        public GameBuilder()
+        public GameBuilder WithDiceCount(int diceCount)
         {
+            _diceCount = diceCount;
+
+            return this;
+        }
+
+        public GameBuilder WithPlayersCount(int count)
+        {
+            _playersCount = count;
+
+            return this;
         }
 
         internal Game Please()
         {
-            return new Game(casino ?? new Casino(100), croupier ?? new Croupier(1));
+            var game = new Game(_diceCount);
+
+            if (_playersCount > 0)
+            {
+                var fixture = new Fixture();
+                fixture.CreateMany<Player>(_playersCount).ToList().ForEach(x => x.JoinGame(game));
+            }
+
+            return game;
         }
 
     }

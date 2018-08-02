@@ -1,22 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Moq;
 
 namespace TddCasino.Tests.DSL
 {
     public class PlayerBuilder
     {
-        private readonly Player player;
+        private readonly Player _player;
 
         public PlayerBuilder()
         {
-            player = new Player();
+            _player = new Player();
         }
 
-        internal Player Please()
+        public PlayerBuilder InGame(Game game = null)
         {
-            return player;
+            _player.JoinGame(game ?? Create.Game.Please());
+
+            return this;
         }
 
+        public PlayerBuilder WithChips(int chipsAmount)
+        {
+            _player.BuyChips(chipsAmount);
+
+            return this;
+        }
+
+        public PlayerBuilder WithBet(int chipsAmount, int number)
+        {
+            _player.MakeBet(chipsAmount, number);
+
+            return this;
+        }
+
+        public Player Please()
+        {
+            return _player;
+        }
     }
 }

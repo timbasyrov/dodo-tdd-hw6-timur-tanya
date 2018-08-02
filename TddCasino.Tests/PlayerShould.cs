@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Moq;
 using TddCasino.Tests.DSL;
 using Xunit;
@@ -7,12 +8,11 @@ namespace TddCasino.Tests
 {
     public class PlayerShould
     {
-
         [Fact]
         public void BeInGame_WhenJoinGame()
         {
-            var player = Create.Player.Please();
             var game = Create.Game.Please();
+            var player = Create.Player.Please();
 
             player.JoinGame(game);
 
@@ -20,11 +20,9 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        //Я, как игрок, могу выйти из игры
         public void NotBeInGame_WhenLeaveGame()
         {
-            var player = new Player();
-            player.JoinGame(new Game(new Casino(100), new Croupier(1)));
+            var player = Create.Player.InGame().Please();
 
             player.LeaveGame();
 
@@ -32,10 +30,9 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        //Я, как игрок, не могу выйти из игры, если я в нее не входил
         public void ThrowExceptionOnLeaveGame_WhenNotInGame()
         {
-            var player = new Player();
+            var player = Create.Player.Please();
 
             Action act = () => player.LeaveGame();
 
@@ -43,25 +40,19 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        //Я, как игрок, могу играть только в одну игру одновременно
         public void ThrowExceptionOnJoinGame_WhenInGame()
         {
-            var casino = new Casino(100);
-            var player = new Player();
-            player.JoinGame(new Game(casino, new Croupier(1)));
+            var player = Create.Player.InGame().Please();
 
-            Action act = () => player.JoinGame(new Game(casino, new Croupier(1)));
+            Action act = () => player.JoinGame(Create.Game.Please());
 
             Assert.Throws<AlreadyInGameException>(act);
         }
 
         [Fact]
-        // Я, как игрок, могу купить фишки у казино, чтобы делать ставки
         public void Have10AvailableChips_WhenBuy10Chips()
         {
-            var game = new Game(new Casino(100), new Croupier(1));
-            var player = new Player();
-            player.JoinGame(game);
+            var player = Create.Player.InGame().Please();
 
             player.BuyChips(10);
 
@@ -69,13 +60,9 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу сделать ставку в игре в кости, чтобы выиграть
         public void Have10AvailableChips_WhenBuy20ChipsAndMakeBetWith10Chips()
         {
-            var game = new Game(new Casino(100), new Croupier(1));
-            var player = new Player();
-            player.JoinGame(game);
-            player.BuyChips(20);
+            var player = Create.Player.InGame().WithChips(20).Please();
 
             player.MakeBet(chipsAmount: 10, number: 2);
 
@@ -83,13 +70,9 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, не могу поставить фишек больше, чем я купил
         public void ThrowException_WhenBuy10ChipsAndMakeBetWith100Chips()
         {
-            var game = new Game(new Casino(100), new Croupier(1));
-            var player = new Player();
-            player.JoinGame(game);
-            player.BuyChips(10);
+            var player = Create.Player.InGame().WithChips(10).Please();
 
             Action act = () => player.MakeBet(chipsAmount: 100, number: 2);
 
@@ -97,13 +80,9 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу сделать несколько ставок на разные числа, чтобы повысить вероятность выигрыша
         public void Have2Bets_WhenMakeBetTwice()
         {
-            var player = new Player();
-            var game = new Game(new Casino(100), new Croupier(1));
-            player.JoinGame(game);
-            player.BuyChips(15);
+            var player = Create.Player.InGame().WithChips(15).Please();
 
             player.MakeBet(chipsAmount: 5, number: 2);
             player.MakeBet(chipsAmount: 10, number: 3);
@@ -112,13 +91,9 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу поставить только на числа 1 - 6
         public void ThrowException_WhenBetNumberIsZero_AndOneDiceInGame()
         {
-            var player = new Player();
-            var game = new Game(new Casino(100), new Croupier(1));
-            player.JoinGame(game);
-            player.BuyChips(15);
+            var player = Create.Player.InGame().WithChips(15).Please();
 
             Action act = () => player.MakeBet(chipsAmount: 5, number: 0);
 
@@ -126,13 +101,9 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу поставить только на числа 1 - 6
         public void ThrowException_WhenBetNumberIs7_AndOneDiceInGame()
         {
-            var player = new Player();
-            var game = new Game(new Casino(100), new Croupier(1));
-            player.JoinGame(game);
-            player.BuyChips(15);
+            var player = Create.Player.InGame().WithChips(15).Please();
 
             Action act = () => player.MakeBet(chipsAmount: 5, number: 7);
 
@@ -140,16 +111,14 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу проиграть, если сделал неправильную ставку
         public void Lose_WhenMadeWrongBet()
         {
-            var playerMock = new Mock<Player>();
-            var cropierStub = new Mock<Croupier>(1);
-            cropierStub.Setup(x => x.RollDices()).Returns(4);
-            var game = new Game(new Casino(100), cropierStub.Object);
-            playerMock.Object.JoinGame(game);
-            playerMock.Object.BuyChips(15);
-            playerMock.Object.MakeBet(chipsAmount: 5, number: 5);
+            var game = Create.GameMock.WithLuckyNumber(4).Please().Object;
+            var playerMock = Create.PlayerMock
+                .InGame(game)
+                .WithChips(15)
+                .WithBet(chipsAmount: 5, number: 5)
+                .Please();
 
             game.Play();
 
@@ -157,16 +126,14 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу выиграть 6 ставок, если сделал правильную ставку
         public void GetChipsMultipleTo6_WhenMadeRightBet()
-        {
-            var cropierStub = new Mock<Croupier>(1);
-            cropierStub.Setup(x => x.RollDices()).Returns(4);
-            var game = new Game(new Casino(100), cropierStub.Object);
-            var player = new Player();
-            player.JoinGame(game);
-            player.BuyChips(10);
-            player.MakeBet(chipsAmount: 10, number: 4);
+        {            
+            var game = Create.GameMock.WithLuckyNumber(4).Please().Object;
+            var player = Create.Player
+                .InGame(game)
+                .WithChips(10)
+                .WithBet(chipsAmount: 10, number: 4)
+                .Please();
 
             game.Play();
 
@@ -174,17 +141,15 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу сделать несколько ставок на разные числа и получить выигрыш по тем, которые выиграли
         public void Win_WhenMadeAtListOneRightBet()
         {
-            var playerMock = new Mock<Player>();
-            var cropierStub = new Mock<Croupier>(1);
-            cropierStub.Setup(x => x.RollDices()).Returns(4);
-            var game = new Game(new Casino(100), cropierStub.Object);
-            playerMock.Object.JoinGame(game);
-            playerMock.Object.BuyChips(15);
-            playerMock.Object.MakeBet(chipsAmount: 5, number: 4);
-            playerMock.Object.MakeBet(chipsAmount: 10, number: 1);
+            var game = Create.GameMock.WithLuckyNumber(4).Please().Object;
+            var playerMock = Create.PlayerMock
+                .InGame(game)
+                .WithChips(15)
+                .WithBet(chipsAmount: 5, number: 4)
+                .WithBet(chipsAmount: 10, number: 1)
+                .Please();
 
             game.Play();
 
@@ -192,13 +157,12 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу делать ставки на числа от 2 до 12
         public void ThrowException_WhenBetNumberIs1_AndTwoDicesInGame()
         {
-            var player = new Player();
-            var game = new Game(new Casino(100), new Croupier(2));
-            player.JoinGame(game);
-            player.BuyChips(15);
+            var player = Create.Player
+                .InGame(Create.Game.WithDiceCount(2).Please())
+                .WithChips(15)
+                .Please();
 
             Action act = () => player.MakeBet(chipsAmount: 5, number: 1);
 
@@ -206,13 +170,12 @@ namespace TddCasino.Tests
         }
 
         [Fact]
-        // Я, как игрок, могу делать ставки на числа от 2 до 12
         public void ThrowException_WhenBetNumberIs13_AndTwoDicesInGame()
         {
-            var player = new Player();
-            var game = new Game(new Casino(100), new Croupier(2));
-            player.JoinGame(game);
-            player.BuyChips(15);
+            var player = Create.Player
+                .InGame(Create.Game.WithDiceCount(2).Please())
+                .WithChips(15)
+                .Please();
 
             Action act = () => player.MakeBet(chipsAmount: 5, number: 13);
 
